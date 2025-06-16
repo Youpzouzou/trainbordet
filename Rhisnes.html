@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Temps de trajet</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 10px;
+      font-size: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #result {
+      font-size: 2em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="result">Chargement...</div>
+
+  <script>
+    const start = "1 Place de la paix, 1140 Evere";
+    const end = "Rue du fond du maréchal, Suarlée";
+
+    async function fetchTime() {
+      const url = `https://api.openrouteservice.org/v2/directions/driving-car/geojson`;
+      const geocode = async (query) => {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        return [parseFloat(data[0].lon), parseFloat(data[0].lat)];
+      };
+
+      try {
+        const [startCoord, endCoord] = await Promise.all([geocode(start), geocode(end)]);
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            coordinates: [startCoord, endCoord]
+          })
+        });
+        const data = await res.json();
+        const durationSec = data.features[0].properties.summary.duration;
+        const durationMin = Math.round(durationSec / 60);
+        document.getElementById("result").textContent = `🕒 ${durationMin} min`;
+      } catch (e) {
+        document.getElementById("result").textContent = "Erreur de trajet.";
+        console.error(e);
+      }
+    }
+
+    fetchTime();
+    setInterval(fetchTime, 5 * 60 * 1000); // refresh every 5 min
+  </script>
+</body>
+</html>
