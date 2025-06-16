@@ -42,7 +42,7 @@
   <h2>Bordet – Voie 2</h2>
   <table id="train-table">
     <thead>
-      <tr><th>Heure</th><th>Destination</th><th>Retard</th></tr>
+      <tr><th></th><th>Heure</th><th>Destination</th><th>Retard</th></tr>
     </thead>
     <tbody></tbody>
   </table>
@@ -60,7 +60,7 @@
           .slice(0, 3);
 
         if (trainsVoie2.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="3">Aucun train sur la voie 2 actuellement.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="4">Aucun train sur la voie 2 actuellement.</td></tr>`;
           return;
         }
 
@@ -71,6 +71,7 @@
             : "À l'heure";
 
           const row = `<tr>
+            <td>🚆</td>
             <td>${heure}</td>
             <td>${dep.station}</td>
             <td>${retard}</td>
@@ -80,7 +81,7 @@
       } catch (error) {
         console.error("Erreur lors du chargement des données : ", error);
         document.querySelector("#train-table tbody").innerHTML =
-          `<tr><td colspan="3">Erreur de chargement des données.</td></tr>`;
+          `<tr><td colspan="4">Erreur de chargement des données.</td></tr>`;
       }
     }
 
