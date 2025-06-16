@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bordet - Voie 1</title>
+  <style>
+    /* Reset global, annule marges/paddings par défaut et celles de Dakboard */
+    * {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box;
+    }
+    html, body, #container {
+      height: 100%;
+      width: 100%;
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 11px;
+    }
+    #container {
+      position: fixed;
+      top: 0; left: 0;
+      overflow: auto;
+      padding: 5px;
+    }
+    h2 {
+      text-align: center;
+      margin: 0.5em 0;
+      font-size: 1.2em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #444;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 11px;
+    }
+    th {
+      background-color: #333;
+    }
+    tr:nth-child(even) {
+      background-color: #222;
+    }
+    .retard {
+      color: #f00;
+      font-weight: bold;
+    }
+    .icon-train {
+      margin-right: 6px;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h2>Bordet - Voie 1</h2>
+    <table id="train-table">
+      <thead>
+        <tr><th>Heure</th><th>Destination</th><th>Retard</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const trainIcon = `<span class="icon-train">🚆</span>`;
+
+    async function loadTrains() {
+      const response = await fetch('https://api.irail.be/v1/liveboard/?station=Bordet&format=json&lang=fr');
+      const data = await response.json();
+      const tbody = document.querySelector("#train-table tbody");
+      tbody.innerHTML = "";
+
+      // Filtrer les trains sur la voie 1
+      const trainsVoie1 = data.departures.departure.filter(dep => dep.platform === "1").slice(0, 3);
+
+      if(trainsVoie1.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3">Aucun train sur la voie 1 actuellement.</td></tr>`;
+        return;
+      }
+
+      trainsVoie1.forEach(dep => {
+        const heure = new Date(dep.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const retard = dep.delay > 0 
+          ? `<span class="retard">${Math.round(dep.delay / 60)} min</span>` 
+          : "À l'heure";
+        const row = `<tr>
+          <td>${trainIcon} ${heure}</td>
+          <td>${dep.station}</td>
+          <td>${retard}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    loadTrains();
+    setInterval(loadTrains, 60000); // Recharge chaque minute
+  </script>
+</body>
+</html>
