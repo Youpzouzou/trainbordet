@@ -27,8 +27,8 @@
     async function calculateRoute() {
       try {
         // Coordonnées testées : Evere → Suarlée
-        const startLon = 4.4054, startLat = 50.8765;   // Evere
-        const endLon = 4.8255, endLat = 50.4572;       // Suarlée
+        const startLon = 4.4009, startLat = 50.8770;   // Evere
+        const endLon = 4.7925, endLat = 50.4881;       // Suarlée
 
         const url = `https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${endLon},${endLat}?overview=false&geometries=polyline`;
         const res = await fetch(url);
