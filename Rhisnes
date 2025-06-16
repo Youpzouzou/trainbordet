@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Trajet Evere → Suarlée</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 10px;
+      font-size: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #result {
+      font-size: 2em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="result">Chargement...</div>
+
+  <script>
+    const startAddress = "Place de la paix, 1140 Evere";
+    const endAddress = "Rue du fond du Maréchal, Suarlée";
+
+    async function geocode(address) {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!data || data.length === 0) throw new Error("Adresse non trouvée");
+      return [parseFloat(data[0].lon), parseFloat(data[0].lat)];
+    }
+
+    async function calculateRoute() {
+      try {
+        const [start, end] = await Promise.all([geocode(startAddress), geocode(endAddress)]);
+        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${start[0]},${start[1]};${end[0]},${end[1]}?overview=false`;
+        const routeRes = await fetch(osrmUrl);
+        const routeData = await routeRes.json();
+        if (!routeData.routes || routeData.routes.length === 0) throw new Error("Trajet non trouvé");
+        const duration = Math.round(routeData.routes[0].duration / 60);
+        document.getElementById("result").textContent = `🧭 ${duration} min`;
+      } catch (e) {
+        document.getElementById("result").textContent = "Erreur de trajet";
+        console.error(e);
+      }
+    }
+
+    calculateRoute();
+    setInterval(calculateRoute, 5 * 60 * 1000);
+  </script>
+</body>
+</html>
