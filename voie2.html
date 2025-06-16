@@ -88,7 +88,7 @@
         const heure = new Date(dep.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const retard = dep.delay > 0 
           ? `<span class="retard">${Math.round(dep.delay / 60)} min</span>` 
-          : "À l'heure";
+          : "0";
         const row = `<tr>
           <td>${trainIcon} ${heure}</td>
           <td>${dep.station}</td>
