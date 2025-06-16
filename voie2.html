@@ -4,13 +4,25 @@
   <meta charset="UTF-8" />
   <title>Bordet - Voie 2</title>
   <style>
-    body {
-      font-family: sans-serif;
+    /* Reset global, annule marges/paddings par défaut et celles de Dakboard */
+    * {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box;
+    }
+    html, body, #container {
+      height: 100%;
+      width: 100%;
       background: #111;
       color: #fff;
-      margin: 0;
-      padding: 0;
+      font-family: sans-serif;
       font-size: 11px;
+    }
+    #container {
+      position: fixed;
+      top: 0; left: 0;
+      overflow: auto; /* si besoin de scroll */
+      padding: 5px; /* optionnel : espace intérieur */
     }
     h2 {
       text-align: center;
@@ -20,14 +32,13 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 0;
     }
     th, td {
       padding: 4px 6px;
       border-bottom: 1px solid #444;
       text-align: center;
-      font-size: 11px;
       vertical-align: middle;
+      font-size: 11px;
     }
     th {
       background-color: #333;
@@ -47,13 +58,15 @@
   </style>
 </head>
 <body>
-  <h2>Bordet - Voie 2</h2>
-  <table id="train-table">
-    <thead>
-      <tr><th>Heure</th><th>Destination</th><th>Retard</th></tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div id="container">
+    <h2>Bordet - Voie 2</h2>
+    <table id="train-table">
+      <thead>
+        <tr><th>Heure</th><th>Destination</th><th>Retard</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
     const trainIcon = `<span class="icon-train">🚆</span>`;
@@ -64,7 +77,6 @@
       const tbody = document.querySelector("#train-table tbody");
       tbody.innerHTML = "";
 
-      // Filtrer les trains sur la voie 2
       const trainsVoie2 = data.departures.departure.filter(dep => dep.platform === "2").slice(0, 3);
 
       if(trainsVoie2.length === 0) {
