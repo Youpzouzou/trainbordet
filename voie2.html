@@ -4,12 +4,34 @@
   <meta charset="UTF-8">
   <title>Départs voie 2 – Gare de Bordet</title>
   <style>
-    body { font-family: sans-serif; background: #111; color: #fff; padding: 20px; }
-    h2 { text-align: center; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { padding: 10px; border-bottom: 1px solid #444; text-align: center; }
-    th { background-color: #333; }
-    tr:nth-child(even) { background-color: #222; }
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+      font-size: 0.75rem;
+    }
+    h2 {
+      text-align: center;
+      font-size: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 0.75rem;
+    }
+    th, td {
+      padding: 6px;
+      border-bottom: 1px solid #444;
+      text-align: center;
+    }
+    th {
+      background-color: #333;
+    }
+    tr:nth-child(even) {
+      background-color: #222;
+    }
   </style>
 </head>
 <body>
@@ -28,29 +50,4 @@
       const tbody = document.querySelector("#train-table tbody");
       tbody.innerHTML = "";
 
-      // Filtrer les trains sur la voie 2
-      const trainsVoie2 = data.departures.departure.filter(dep => dep.platform === "2").slice(0, 6);
-
-      if(trainsVoie2.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4">Aucun train sur la voie 2 actuellement.</td></tr>`;
-        return;
-      }
-
-      trainsVoie2.forEach(dep => {
-        const heure = new Date(dep.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        const retard = dep.delay > 0 ? `${Math.round(dep.delay / 60)} min` : "À l'heure";
-        const row = `<tr>
-          <td>${heure}</td>
-          <td>${dep.station}</td>
-          <td>${dep.platform || "-"}</td>
-          <td>${retard}</td>
-        </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
-
-    loadTrains();
-    setInterval(loadTrains, 60000); // Recharge chaque minute
-  </script>
-</body>
-</html>
+      const trainsVoie2 = data.departures.departure.filter(dep => dep.platform ===
