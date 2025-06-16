@@ -37,7 +37,7 @@
         if (!data.routes || !data.routes.length) throw new Error("Pas de route trouvée");
 
         const duration = Math.round(data.routes[0].duration / 60);
-        document.getElementById("result").textContent = `🧭 ${duration} min`;
+        document.getElementById("result").textContent = `🚗${duration} min`;
       } catch (err) {
         document.getElementById("result").textContent = "Erreur de trajet";
         console.error(err);
